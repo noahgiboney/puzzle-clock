@@ -1,4 +1,4 @@
-package com.example.puzzleclock
+package com.example.puzzleclock.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,6 +30,9 @@ import androidx.compose.ui.unit.dp
 import com.example.puzzleclock.ui.theme.PuzzleClockTheme
 import java.util.Calendar
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.puzzleclock.viewModels.NewAlarmViewModel
+import com.example.puzzleclock.R
+import com.example.puzzleclock.ui.components.FloatingActionButton
 
 class NewAlarmActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +73,11 @@ fun NewAlarmScaffold(
 
 @Composable
 fun AddAlarmScreen(modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
         TimePicker()
 
         AlarmToggle(viewModel = viewModel())
@@ -92,16 +99,16 @@ fun TimePicker(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 20.dp, horizontal = 50.dp),
+            .padding(horizontal = 40.dp),
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp),
+                .padding(horizontal = 15.dp),
             contentAlignment = Alignment.Center
         ) {
             TimeInput(
-                modifier = Modifier,
+                modifier = modifier.padding(top = 20.dp),
                 state = timePickerState,
 
             )

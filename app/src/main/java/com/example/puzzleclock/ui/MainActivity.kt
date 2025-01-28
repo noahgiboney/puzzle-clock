@@ -1,4 +1,4 @@
-package com.example.puzzleclock
+package com.example.puzzleclock.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
