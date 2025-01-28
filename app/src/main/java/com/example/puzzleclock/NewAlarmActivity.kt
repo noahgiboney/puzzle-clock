@@ -59,7 +59,7 @@ fun NewAlarmScaffold(
             FloatingActionButton(
                 modifier = Modifier.padding(16.dp),
                 icon = Icons.Default.Check,
-                onClick = { }
+                onClick = { viewModel.addAlarm() }
             )
         }
     )
@@ -73,7 +73,7 @@ fun AddAlarmScreen(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         TimePicker()
 
-        AlarmToggle()
+        AlarmToggle(viewModel = viewModel())
     }
 }
 
@@ -102,14 +102,18 @@ fun TimePicker(modifier: Modifier = Modifier) {
         ) {
             TimeInput(
                 modifier = Modifier,
-                state = timePickerState
+                state = timePickerState,
+
             )
         }
     }
 }
 
 @Composable
-fun AlarmToggle(modifier: Modifier = Modifier) {
+fun AlarmToggle(
+    modifier: Modifier = Modifier,
+    viewModel: NewAlarmViewModel
+) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -124,8 +128,8 @@ fun AlarmToggle(modifier: Modifier = Modifier) {
         ) {
             Text(stringResource(R.string.set_alarm))
             Switch(
-                checked = true,
-                onCheckedChange = {}
+                checked = viewModel.isAlarmSet,
+                onCheckedChange = { viewModel.isAlarmSet = it }
             )
         }
     }
