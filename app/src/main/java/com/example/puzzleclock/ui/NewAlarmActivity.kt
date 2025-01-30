@@ -1,6 +1,7 @@
 package com.example.puzzleclock.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -13,10 +14,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -62,7 +65,10 @@ fun NewAlarmScaffold(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { viewModel.addAlarm() }) {
-                Icons.Default.Check
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = "Add Alarm"
+                )
             }
         }
     )
