@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 
 class NewAlarmViewModel: ViewModel() {
 
+    var alarmTitle by mutableStateOf("")
     var isAlarmSet by mutableStateOf(false)
 
     fun addAlarm() {
