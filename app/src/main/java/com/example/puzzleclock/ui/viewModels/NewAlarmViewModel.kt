@@ -1,4 +1,4 @@
-package com.example.puzzleclock.viewModels
+package com.example.puzzleclock.ui.viewModels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

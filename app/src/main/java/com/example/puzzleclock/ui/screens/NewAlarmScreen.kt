@@ -1,10 +1,5 @@
-package com.example.puzzleclock.ui
+package com.example.puzzleclock.ui.screens
 
-import android.os.Bundle
-import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,11 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,27 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.puzzleclock.ui.theme.PuzzleClockTheme
-import java.util.Calendar
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.puzzleclock.viewModels.NewAlarmViewModel
 import com.example.puzzleclock.R
-
-class NewAlarmActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            PuzzleClockTheme {
-                NewAlarmScaffold()
-            }
-        }
-    }
-}
+import com.example.puzzleclock.ui.viewModels.NewAlarmViewModel
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewAlarmScaffold(
+fun NewAlarmScreen(
     viewModel: NewAlarmViewModel = viewModel()
 ) {
     Scaffold(
@@ -84,28 +63,17 @@ fun NewAlarmScaffold(
         },
     )
     { innerPadding ->
-        AddAlarmScreen(
-            modifier = Modifier.padding(innerPadding),
-            viewModel = viewModel
-            )
-    }
-}
+        Column(
+            modifier = Modifier.padding(innerPadding)
+                .padding(horizontal = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            AlarmTitleInput(viewModel = viewModel)
 
-@Composable
-fun AddAlarmScreen(
-    modifier: Modifier = Modifier,
-    viewModel: NewAlarmViewModel
-) {
-    Column(
-        modifier = modifier
-            .padding(horizontal = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        AlarmTitleInput(viewModel = viewModel)
+            TimePicker()
 
-        TimePicker()
-
-        AlarmToggle(viewModel = viewModel)
+            AlarmToggle(viewModel = viewModel)
+        }
     }
 }
 
@@ -134,7 +102,7 @@ fun TimePicker(modifier: Modifier = Modifier) {
                 modifier = modifier.padding(top = 20.dp),
                 state = timePickerState,
 
-            )
+                )
         }
     }
 }
@@ -142,7 +110,8 @@ fun TimePicker(modifier: Modifier = Modifier) {
 @Composable
 fun AlarmTitleInput(
     modifier: Modifier = Modifier,
-    viewModel: NewAlarmViewModel) {
+    viewModel: NewAlarmViewModel
+) {
     TextField(
         modifier = modifier.fillMaxWidth(),
         value = viewModel.alarmTitle,

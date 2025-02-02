@@ -3,4 +3,5 @@
     <string name="title_activity_new_alarm">NewAlarmActivity</string>
     <string name="title_activity_alarms">AlarmsActivity</string>
     <string name="set_alarm">Set Alarm</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>
