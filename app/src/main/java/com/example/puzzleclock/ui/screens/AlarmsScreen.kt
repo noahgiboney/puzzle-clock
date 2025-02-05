@@ -25,10 +25,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.puzzleclock.ui.NavRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ALarmsScreen() {
+fun AlarmsScreen(
+    navController: NavController
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -42,8 +46,7 @@ fun ALarmsScreen() {
                     )
                 },
                 actions = {
-                    // TODO: navigate to settings activity
-                    IconButton(onClick = { /* do something */ }) {
+                    IconButton(onClick = { navController.navigate(NavRoutes.Settings) }) {
                         Icon(
                             imageVector = Icons.Filled.Settings,
                             contentDescription = "Modify settings"
@@ -53,8 +56,7 @@ fun ALarmsScreen() {
             )
         },
         floatingActionButton = {
-            // TODO: navigate to NewAlarmActivity
-            FloatingActionButton(onClick = {}) {
+            FloatingActionButton(onClick = { navController.navigate(NavRoutes.EditAlarm) }) {
                 Log.d("tag", "test")
                 Icon(
                     imageVector = Icons.Filled.Add,

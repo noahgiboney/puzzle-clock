@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.puzzleclock.R
 import com.example.puzzleclock.ui.viewModels.NewAlarmViewModel
 import java.util.Calendar
@@ -36,6 +37,7 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewAlarmScreen(
+    navController: NavController,
     viewModel: NewAlarmViewModel = viewModel()
 ) {
     Scaffold(
@@ -44,7 +46,7 @@ fun NewAlarmScreen(
             TopAppBar(
                 title = { Text("New Alarm") },
                 navigationIcon =  {
-                    IconButton(onClick = { /*navigation back*/ }) {
+                    IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
