@@ -31,7 +31,8 @@ import com.example.puzzleclock.ui.NavRoutes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmsScreen(
-    navController: NavController
+    onNavigateToSettings: () -> Unit,
+    onNavigateToEditAlarm: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -46,7 +47,7 @@ fun AlarmsScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = { navController.navigate(NavRoutes.Settings) }) {
+                    IconButton(onClick = { onNavigateToSettings() }) {
                         Icon(
                             imageVector = Icons.Filled.Settings,
                             contentDescription = "Modify settings"
@@ -56,7 +57,7 @@ fun AlarmsScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate(NavRoutes.EditAlarm) }) {
+            FloatingActionButton(onClick = { onNavigateToEditAlarm() }) {
                 Log.d("tag", "test")
                 Icon(
                     imageVector = Icons.Filled.Add,

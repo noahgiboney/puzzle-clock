@@ -37,8 +37,8 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewAlarmScreen(
-    navController: NavController,
-    viewModel: NewAlarmViewModel = viewModel()
+    viewModel: NewAlarmViewModel = viewModel(),
+    onNavigateUp: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -46,7 +46,7 @@ fun NewAlarmScreen(
             TopAppBar(
                 title = { Text("New Alarm") },
                 navigationIcon =  {
-                    IconButton(onClick = { navController.navigateUp() }) {
+                    IconButton(onClick = { onNavigateUp() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"

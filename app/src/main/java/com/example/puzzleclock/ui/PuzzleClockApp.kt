@@ -1,12 +1,12 @@
 package com.example.puzzleclock.ui
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.puzzleclock.ui.screens.AlarmsScreen
 import com.example.puzzleclock.ui.screens.NewAlarmScreen
+import com.example.puzzleclock.ui.screens.SettingsScreen
 import kotlinx.serialization.Serializable
 
 sealed class NavRoutes {
@@ -27,18 +27,21 @@ fun PuzzleClockApp() {
     NavHost(navController = navController, startDestination = NavRoutes.Alarms) {
         composable<NavRoutes.Alarms> {
             AlarmsScreen(
-                navController = navController
+                onNavigateToEditAlarm = { navController.navigate(NavRoutes.EditAlarm) },
+                onNavigateToSettings = { navController.navigate(NavRoutes.Settings) }
             )
         }
 
         composable<NavRoutes.EditAlarm> {
            NewAlarmScreen(
-               navController = navController
+               onNavigateUp = { navController.navigateUp() }
            )
         }
 
         composable<NavRoutes.Settings> {
-            Text("Settings Soon")
+            SettingsScreen(
+                onNavigateUp = { navController.navigateUp() }
+            )
         }
     }
 }
