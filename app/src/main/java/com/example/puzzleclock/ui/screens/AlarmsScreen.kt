@@ -3,9 +3,13 @@ package com.example.puzzleclock.ui.screens
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
@@ -25,14 +29,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import com.example.puzzleclock.ui.NavRoutes
+import com.example.puzzleclock.ui.viewModels.AlarmsViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.puzzleclock.data.Alarm
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmsScreen(
     onNavigateToSettings: () -> Unit,
-    onNavigateToEditAlarm: () -> Unit
+    onNavigateToEditAlarm: () -> Unit,
+    viewModel: AlarmsViewModel
 ) {
     Scaffold(
         topBar = {
@@ -66,19 +72,33 @@ fun AlarmsScreen(
             }
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier.padding(innerPadding),
-        ) {
-            // TODO: display list of current alarms in viewmodel (w/ loop)
-            AlarmToggle()
+       AlarmCardList(viewModel = viewModel, innerPadding = innerPadding)
+    }
+}
+
+@Composable
+fun AlarmCardList(
+    modifier: Modifier = Modifier,
+    viewModel: AlarmsViewModel,
+    innerPadding: PaddingValues = PaddingValues(0.dp)
+) {
+    var currAlarmsList = viewModel.alarms
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+    ) {
+        items(currAlarmsList) { alarm ->
+            AlarmCard(alarm, modifier, viewModel)
         }
     }
 }
 
 @Composable
-fun AlarmToggle(
+fun AlarmCard(
+    alarm: Alarm,
     modifier: Modifier = Modifier,
-    // TODO: apply viewmodel
+    viewModel: AlarmsViewModel = viewModel()
 ) {
     Card(
         modifier = modifier
@@ -96,14 +116,12 @@ fun AlarmToggle(
                 modifier = Modifier
                     .padding(vertical = 14.dp)
             ) {
-                // TODO: populate with alarm data from list
-                Text("Alarm Title", fontSize = 18.sp)
-                Text("10:20am", fontSize = 14.sp)
+                Text(alarm.title, fontSize = 18.sp)
+                Text(alarm.time + alarm.meridiem, fontSize = 14.sp)
             }
             Switch(
-                // TODO:
-                checked = false/*viewModel.isAlarmSet*/,
-                onCheckedChange = { /*viewModel.isAlarmSet = it*/ }
+                checked = viewModel.isAlarmSet,
+                onCheckedChange = { viewModel.isAlarmSet = it }
             )
         }
     }

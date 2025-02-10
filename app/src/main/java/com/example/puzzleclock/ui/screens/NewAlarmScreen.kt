@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.puzzleclock.R
+import com.example.puzzleclock.ui.viewModels.AlarmsViewModel
 import com.example.puzzleclock.ui.viewModels.NewAlarmViewModel
 import java.util.Calendar
 
@@ -38,7 +39,8 @@ import java.util.Calendar
 @Composable
 fun NewAlarmScreen(
     viewModel: NewAlarmViewModel = viewModel(),
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
+    alarmsViewModel: AlarmsViewModel
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -56,7 +58,12 @@ fun NewAlarmScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { viewModel.addAlarm() }) {
+            FloatingActionButton(onClick = {
+                val newAlarm = viewModel.createAlarm()
+                alarmsViewModel.addAlarm(newAlarm)
+                // pop backstack
+                onNavigateUp()
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Check,
                     contentDescription = "Add Alarm"
