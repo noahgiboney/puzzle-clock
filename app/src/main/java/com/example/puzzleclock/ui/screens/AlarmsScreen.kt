@@ -25,6 +25,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -32,6 +34,9 @@ import androidx.compose.ui.unit.sp
 import com.example.puzzleclock.ui.viewModels.AlarmsViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.puzzleclock.data.Alarm
+import com.example.puzzleclock.data.Meridiem
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,7 +87,7 @@ fun AlarmCardList(
     viewModel: AlarmsViewModel,
     innerPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    var currAlarmsList = viewModel.alarms
+    val currAlarmsList by viewModel.alarms.collectAsState()
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -94,12 +99,17 @@ fun AlarmCardList(
     }
 }
 
+
 @Composable
 fun AlarmCard(
     alarm: Alarm,
     modifier: Modifier = Modifier,
     viewModel: AlarmsViewModel = viewModel()
 ) {
+
+    val formattedTime = LocalTime.of(alarm.hours, alarm.minutes)
+        .format(DateTimeFormatter.ofPattern("hh:mm a"))
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -117,11 +127,11 @@ fun AlarmCard(
                     .padding(vertical = 14.dp)
             ) {
                 Text(alarm.title, fontSize = 18.sp)
-                Text(alarm.time + alarm.meridiem, fontSize = 14.sp)
+                Text(formattedTime)
             }
             Switch(
-                checked = viewModel.isAlarmSet,
-                onCheckedChange = { viewModel.isAlarmSet = it }
+                checked = alarm.isSet,
+                onCheckedChange = {viewModel.toggleAlarm(alarm) }
             )
         }
     }

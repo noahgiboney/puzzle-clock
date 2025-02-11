@@ -11,7 +11,6 @@ class NewAlarmViewModel: ViewModel() {
 
     var hours by mutableStateOf(2)
     var minutes by mutableStateOf(4)
-    var time by mutableStateOf("12:00")
     var meridiem by mutableStateOf(Meridiem.AM)
     var alarmTitle by mutableStateOf("")
     var isAlarmSet by mutableStateOf(false)
@@ -20,15 +19,16 @@ class NewAlarmViewModel: ViewModel() {
 
     }
 
-    fun createAlarm(): Alarm {
-        val formattedTime = String.format("%02d:%02d", hours, minutes)
+    fun createAlarm(hours: Int, minutes: Int, meridiem: Meridiem,
+                    alarmTitle: String, isSet: Boolean): Alarm {
         return Alarm(
             // Unique ID
             id = System.currentTimeMillis().toInt(),
-            time = formattedTime,
+            hours = hours,
+            minutes = minutes,
             meridiem = meridiem,
             title = alarmTitle,
-            isSet = isAlarmSet
+            isSet = isSet
         )
     }
 }

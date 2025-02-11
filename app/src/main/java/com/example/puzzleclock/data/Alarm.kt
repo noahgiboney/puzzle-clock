@@ -6,5 +6,5 @@ enum class Meridiem {
     AM, PM
 }
 
-data class Alarm(val id: Int, val time: String, val meridiem: Meridiem,
-                 val title: String, val isSet: Boolean)
+data class Alarm(val id: Int, val hours: Int, val minutes: Int, val meridiem: Meridiem,
+                 val title: String, var isSet: Boolean)
