@@ -7,4 +7,4 @@ enum class Meridiem {
 }
 
 data class Alarm(val id: Int, val hours: Int, val minutes: Int, val meridiem: Meridiem,
-                 val title: String, val isSet: Boolean)
+                 val title: String, var isSet: Boolean)

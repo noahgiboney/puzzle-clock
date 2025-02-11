@@ -25,6 +25,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -85,7 +87,7 @@ fun AlarmCardList(
     viewModel: AlarmsViewModel,
     innerPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    var currAlarmsList = viewModel.alarms
+    val currAlarmsList by viewModel.alarms.collectAsState()
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -125,15 +127,11 @@ fun AlarmCard(
                     .padding(vertical = 14.dp)
             ) {
                 Text(alarm.title, fontSize = 18.sp)
-                // TODO: format hours and minutes
                 Text(formattedTime)
-                /*Text(alarm.hours.toString() +
-                        alarm.minutes.toString() +
-                        alarm.meridiem, fontSize = 14.sp)*/
             }
             Switch(
-                checked = viewModel.isAlarmSet,
-                onCheckedChange = { viewModel.isAlarmSet = it }
+                checked = alarm.isSet,
+                onCheckedChange = {viewModel.toggleAlarm(alarm) }
             )
         }
     }
