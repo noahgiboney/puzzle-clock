@@ -20,6 +20,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TimeInput
+import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -31,8 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.puzzleclock.R
+import com.example.puzzleclock.data.Meridiem
 import com.example.puzzleclock.ui.viewModels.AlarmsViewModel
 import com.example.puzzleclock.ui.viewModels.NewAlarmViewModel
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,6 +46,14 @@ fun NewAlarmScreen(
     onNavigateUp: () -> Unit,
     alarmsViewModel: AlarmsViewModel
 ) {
+    val currentTime = Calendar.getInstance()
+
+    val timePickerState = rememberTimePickerState(
+        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
+        initialMinute = currentTime.get(Calendar.MINUTE),
+        is24Hour = false,
+    )
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -59,7 +71,18 @@ fun NewAlarmScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                val newAlarm = viewModel.createAlarm()
+                val selectedHour = timePickerState.hour
+                val selectedMinute = timePickerState.minute
+
+                val meridiem = if (selectedHour < 12) Meridiem.AM else Meridiem.PM
+
+                val newAlarm = viewModel.createAlarm(
+                    selectedHour,
+                    selectedMinute,
+                    meridiem,
+                    viewModel.alarmTitle,
+                    viewModel.isAlarmSet
+                )
                 alarmsViewModel.addAlarm(newAlarm)
                 // pop backstack
                 onNavigateUp()
@@ -79,25 +102,16 @@ fun NewAlarmScreen(
         ) {
             AlarmTitleInput(viewModel = viewModel)
 
-            TimePicker()
+            TimePicker(timePickerState)
 
             AlarmToggle(viewModel = viewModel)
         }
     }
 }
 
-@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimePicker(modifier: Modifier = Modifier) {
-    val currentTime = Calendar.getInstance()
-
-    val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
-        initialMinute = currentTime.get(Calendar.MINUTE),
-        is24Hour = false,
-    )
-
+fun TimePicker(timePickerState: TimePickerState, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -110,7 +124,6 @@ fun TimePicker(modifier: Modifier = Modifier) {
             TimeInput(
                 modifier = modifier.padding(top = 20.dp),
                 state = timePickerState,
-
                 )
         }
     }

@@ -32,6 +32,9 @@ import androidx.compose.ui.unit.sp
 import com.example.puzzleclock.ui.viewModels.AlarmsViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.puzzleclock.data.Alarm
+import com.example.puzzleclock.data.Meridiem
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,12 +97,17 @@ fun AlarmCardList(
     }
 }
 
+
 @Composable
 fun AlarmCard(
     alarm: Alarm,
     modifier: Modifier = Modifier,
     viewModel: AlarmsViewModel = viewModel()
 ) {
+
+    val formattedTime = LocalTime.of(alarm.hours, alarm.minutes)
+        .format(DateTimeFormatter.ofPattern("hh:mm a"))
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -117,7 +125,11 @@ fun AlarmCard(
                     .padding(vertical = 14.dp)
             ) {
                 Text(alarm.title, fontSize = 18.sp)
-                Text(alarm.time + alarm.meridiem, fontSize = 14.sp)
+                // TODO: format hours and minutes
+                Text(formattedTime)
+                /*Text(alarm.hours.toString() +
+                        alarm.minutes.toString() +
+                        alarm.meridiem, fontSize = 14.sp)*/
             }
             Switch(
                 checked = viewModel.isAlarmSet,
