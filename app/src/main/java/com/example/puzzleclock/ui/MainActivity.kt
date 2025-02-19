@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             com.example.puzzleclock.ui.theme.PuzzleClockTheme {
                 Surface {
-                    PuzzleScreen()
+                    PuzzleClockApp()
                 }
             }
         }

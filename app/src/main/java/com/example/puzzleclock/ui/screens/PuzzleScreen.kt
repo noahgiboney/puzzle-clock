@@ -34,13 +34,15 @@ import com.example.puzzleclock.ui.viewModels.PuzzleState
 import com.example.puzzleclock.ui.viewModels.PuzzleViewModel
 
 @Composable
-fun PuzzleScreen(viewModel: PuzzleViewModel = viewModel()) {
+fun PuzzleScreen(
+    modifier: Modifier = Modifier,
+    viewModel: PuzzleViewModel = viewModel()
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxHeight()
             .fillMaxWidth()
-            .background(Color.White)
-            .padding(top = 40.dp),
+            .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
         , verticalArrangement = Arrangement.Top
     ) {
@@ -129,6 +131,11 @@ fun PlayingView(viewModel: PuzzleViewModel) {
             onClick = { viewModel.startNewGame() }
         )
         { Text("Reset Game") }
+    } else if (viewModel.userSelections.size == 4) {
+        Button(
+            onClick = { viewModel.startNewGame() }
+        )
+        { Text("New Game") }
     }
 }
 

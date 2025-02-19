@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.puzzleclock.ui.screens.AlarmsScreen
 import com.example.puzzleclock.ui.screens.NewAlarmScreen
+import com.example.puzzleclock.ui.screens.PracticePuzzleScreen
 import com.example.puzzleclock.ui.screens.SettingsScreen
 import com.example.puzzleclock.ui.viewModels.AlarmsViewModel
 import kotlinx.serialization.Serializable
@@ -20,6 +21,9 @@ sealed class NavRoutes {
 
     @Serializable
     data object Settings
+
+    @Serializable
+    data object PracticePuzzle
 }
 
 @Composable
@@ -45,6 +49,13 @@ fun PuzzleClockApp() {
 
         composable<NavRoutes.Settings> {
             SettingsScreen(
+                onNavigateUp = { navController.navigateUp() },
+                onNavigateToPracticePuzzle = { navController.navigate(NavRoutes.PracticePuzzle)}
+            )
+        }
+
+        composable<NavRoutes.PracticePuzzle> {
+            PracticePuzzleScreen(
                 onNavigateUp = { navController.navigateUp() }
             )
         }
