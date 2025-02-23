@@ -27,9 +27,8 @@ sealed class NavRoutes {
 }
 
 @Composable
-fun PuzzleClockApp() {
+fun PuzzleClockApp(alarmsViewModel: AlarmsViewModel) {
     val navController = rememberNavController()
-    val alarmsViewModel: AlarmsViewModel = viewModel()
 
     NavHost(navController = navController, startDestination = NavRoutes.Alarms) {
         composable<NavRoutes.Alarms> {
