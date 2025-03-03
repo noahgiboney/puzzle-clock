@@ -4,4 +4,5 @@
     <string name="title_activity_alarms">AlarmsActivity</string>
     <string name="set_alarm">Set Alarm</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_puzzle">PuzzleActivity</string>
 </resources>

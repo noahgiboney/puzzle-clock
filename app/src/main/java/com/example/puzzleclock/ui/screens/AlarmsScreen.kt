@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,12 +30,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.puzzleclock.ui.viewModels.AlarmsViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.puzzleclock.data.Alarm
+import com.example.puzzleclock.data.AlarmRepository
 import com.example.puzzleclock.data.Meridiem
+import com.example.puzzleclock.ui.viewModels.AlarmsViewModelFactory
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -43,7 +47,12 @@ import java.time.format.DateTimeFormatter
 fun AlarmsScreen(
     onNavigateToSettings: () -> Unit,
     onNavigateToEditAlarm: () -> Unit,
-    viewModel: AlarmsViewModel
+    viewModel: AlarmsViewModel = viewModel(
+        factory = AlarmsViewModelFactory(
+            repository = AlarmRepository(LocalContext.current),
+            context = LocalContext.current
+        )
+    )
 ) {
     Scaffold(
         topBar = {
@@ -106,7 +115,6 @@ fun AlarmCard(
     modifier: Modifier = Modifier,
     viewModel: AlarmsViewModel = viewModel()
 ) {
-
     val formattedTime = LocalTime.of(alarm.hours, alarm.minutes)
         .format(DateTimeFormatter.ofPattern("hh:mm a"))
 
@@ -129,10 +137,21 @@ fun AlarmCard(
                 Text(alarm.title, fontSize = 18.sp)
                 Text(formattedTime)
             }
-            Switch(
-                checked = alarm.isSet,
-                onCheckedChange = {viewModel.toggleAlarm(alarm) }
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Switch(
+                    checked = alarm.isSet,
+                    onCheckedChange = { viewModel.toggleAlarm(alarm) }
+                )
+                IconButton(onClick = { viewModel.deleteAlarm(alarm) }) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = "Delete alarm"
+                    )
+                }
+            }
         }
     }
 }

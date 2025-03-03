@@ -8,23 +8,18 @@ import com.example.puzzleclock.data.Alarm
 import com.example.puzzleclock.data.Meridiem
 
 class NewAlarmViewModel: ViewModel() {
-
-    var hours by mutableStateOf(2)
-    var minutes by mutableStateOf(4)
-    var meridiem by mutableStateOf(Meridiem.AM)
     var alarmTitle by mutableStateOf("")
     var isAlarmSet by mutableStateOf(false)
 
-    fun addAlarm() {
-
-    }
-
-    fun createAlarm(hours: Int, minutes: Int, meridiem: Meridiem,
-                    alarmTitle: String, isSet: Boolean): Alarm {
+    fun createAlarm(hours: Int, minutes: Int, meridiem: Meridiem, alarmTitle: String, isSet: Boolean): Alarm {
+        val adjustedHours = when {
+            hours == 0 -> 12
+            hours > 12 -> hours - 12
+            else -> hours
+        }
         return Alarm(
-            // Unique ID
-            id = System.currentTimeMillis().toInt(),
-            hours = hours,
+            id = java.util.UUID.randomUUID().hashCode(),
+            hours = adjustedHours,
             minutes = minutes,
             meridiem = meridiem,
             title = alarmTitle,

@@ -26,14 +26,18 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.puzzleclock.R
+import com.example.puzzleclock.data.AlarmRepository
 import com.example.puzzleclock.data.Meridiem
 import com.example.puzzleclock.ui.viewModels.AlarmsViewModel
+import com.example.puzzleclock.ui.viewModels.AlarmsViewModelFactory
 import com.example.puzzleclock.ui.viewModels.NewAlarmViewModel
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -44,7 +48,12 @@ import java.util.Calendar
 fun NewAlarmScreen(
     viewModel: NewAlarmViewModel = viewModel(),
     onNavigateUp: () -> Unit,
-    alarmsViewModel: AlarmsViewModel
+    alarmsViewModel: AlarmsViewModel = viewModel(
+        factory = AlarmsViewModelFactory(
+            repository = AlarmRepository(LocalContext.current),
+            context = LocalContext.current
+        )
+    )
 ) {
     val currentTime = Calendar.getInstance()
 
@@ -54,12 +63,14 @@ fun NewAlarmScreen(
         is24Hour = false,
     )
 
+    val isTitleValid = viewModel.alarmTitle.isNotBlank()
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = { Text("New Alarm") },
-                navigationIcon =  {
+                navigationIcon = {
                     IconButton(onClick = { onNavigateUp() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -70,40 +81,40 @@ fun NewAlarmScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                val selectedHour = timePickerState.hour
-                val selectedMinute = timePickerState.minute
-
-                val meridiem = if (selectedHour < 12) Meridiem.AM else Meridiem.PM
-
-                val newAlarm = viewModel.createAlarm(
-                    selectedHour,
-                    selectedMinute,
-                    meridiem,
-                    viewModel.alarmTitle,
-                    viewModel.isAlarmSet
-                )
-                alarmsViewModel.addAlarm(newAlarm)
-                // pop backstack
-                onNavigateUp()
-            }) {
+            FloatingActionButton(
+                onClick = {
+                    if (isTitleValid) {
+                        val selectedHour = timePickerState.hour
+                        val selectedMinute = timePickerState.minute
+                        val meridiem = if (selectedHour < 12) Meridiem.AM else Meridiem.PM
+                        val newAlarm = viewModel.createAlarm(
+                            selectedHour,
+                            selectedMinute,
+                            meridiem,
+                            viewModel.alarmTitle,
+                            viewModel.isAlarmSet
+                        )
+                        alarmsViewModel.addAlarm(newAlarm)
+                        onNavigateUp()
+                    }
+                },
+                modifier = Modifier.alpha(if (isTitleValid) 1f else 0.5f)
+            ) {
                 Icon(
                     imageVector = Icons.Filled.Check,
                     contentDescription = "Add Alarm"
                 )
             }
-        },
-    )
-    { innerPadding ->
+        }
+    ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
                 .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             AlarmTitleInput(viewModel = viewModel)
-
             TimePicker(timePickerState)
-
             AlarmToggle(viewModel = viewModel)
         }
     }
