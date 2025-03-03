@@ -15,8 +15,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.puzzleclock.ui.NavRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,7 +74,8 @@ fun PracticePuzzleScreen(
 
     ) { innerPadding ->
         PuzzleScreen(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            onDismiss = onNavigateUp
         )
     }
 }

@@ -61,15 +61,6 @@ class PuzzleActivity : ComponentActivity() {
 @Composable
 fun PuzzleActivityContent(onDismiss: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
-        PuzzleScreen()
-
-        Button(
-            onClick = onDismiss,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .padding(bottom = 16.dp)
-        ) {
-            Text("Dismiss Alarm")
-        }
+        PuzzleScreen(onDismiss = onDismiss) // Pass onDismiss to PuzzleScreen
     }
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -36,7 +37,8 @@ import com.example.puzzleclock.ui.viewModels.PuzzleViewModel
 @Composable
 fun PuzzleScreen(
     modifier: Modifier = Modifier,
-    viewModel: PuzzleViewModel = viewModel()
+    viewModel: PuzzleViewModel = viewModel(),
+    onDismiss: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -49,7 +51,7 @@ fun PuzzleScreen(
         when(viewModel.gameState.value) {
             PuzzleState.START -> StartGameView(viewModel = viewModel)
             PuzzleState.SHOWCASE -> PuzzleShowcaseView(viewModel = viewModel)
-            PuzzleState.PLAYING -> PlayingView(viewModel = viewModel)
+            PuzzleState.PLAYING -> PlayingView(viewModel = viewModel, onDismiss = onDismiss)
         }
     }
 }
@@ -100,42 +102,62 @@ fun PuzzleShowcaseView(viewModel: PuzzleViewModel) {
 }
 
 @Composable
-fun PlayingView(viewModel: PuzzleViewModel) {
-    Text(
-        text = "Tap The Shapes In The Correct Order",
-        style = TextStyle(
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        ),
-        modifier = Modifier.padding(20.dp)
-    )
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = Modifier.padding(8.dp),
-        contentPadding = PaddingValues(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(15.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp)
+fun PlayingView(viewModel: PuzzleViewModel, onDismiss: () -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier.fillMaxSize()
     ) {
-        items(PuzzleShape.entries.toTypedArray()) { shape ->
-            GameButton(
-                shape = shape,
-                viewModel = viewModel
-            )
-        }
-    }
+        Text(
+            text = "Tap The Shapes In The Correct Order",
+            style = TextStyle(
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            ),
+            modifier = Modifier.padding(20.dp)
+        )
 
-    if (viewModel.hasLost.value) {
-        Button(
-            onClick = { viewModel.startNewGame() }
-        )
-        { Text("Reset Game") }
-    } else if (viewModel.userSelections.size == 4) {
-        Button(
-            onClick = { viewModel.startNewGame() }
-        )
-        { Text("New Game") }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.padding(8.dp),
+            contentPadding = PaddingValues(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(15.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            items(PuzzleShape.entries.toTypedArray()) { shape ->
+                GameButton(
+                    shape = shape,
+                    viewModel = viewModel
+                )
+            }
+        }
+
+        if (viewModel.hasLost.value) {
+            Button(
+                onClick = { viewModel.startNewGame() },
+                modifier = Modifier.padding(top = 20.dp)
+            ) {
+                Text("Reset Game")
+            }
+        } else if (viewModel.userSelections.size == 4) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(top = 20.dp)
+            ) {
+                Button(
+                    onClick = { viewModel.startNewGame() }
+                ) {
+                    Text("New Game")
+                }
+                Button(
+                    onClick = { onDismiss() },
+                    modifier = Modifier.padding(top = 10.dp) // Space between buttons
+                ) {
+                    Text("Close Game")
+                }
+            }
+        }
     }
 }
 
