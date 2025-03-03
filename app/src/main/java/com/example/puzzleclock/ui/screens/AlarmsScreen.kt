@@ -31,6 +31,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.puzzleclock.ui.viewModels.AlarmsViewModel
@@ -97,13 +99,33 @@ fun AlarmCardList(
     innerPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val currAlarmsList by viewModel.alarms.collectAsState()
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-    ) {
-        items(currAlarmsList) { alarm ->
-            AlarmCard(alarm, modifier, viewModel)
+
+    if (currAlarmsList.isEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "No alarms set",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            )
+        }
+    } else {
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            items(currAlarmsList) { alarm ->
+                AlarmCard(alarm, modifier, viewModel)
+            }
         }
     }
 }
