@@ -137,7 +137,12 @@ fun AlarmCard(
     modifier: Modifier = Modifier,
     viewModel: AlarmsViewModel = viewModel()
 ) {
-    val formattedTime = LocalTime.of(alarm.hours, alarm.minutes)
+    val adjustedHours = when (alarm.meridiem) {
+        Meridiem.AM -> if (alarm.hours == 12) 0 else alarm.hours
+        Meridiem.PM -> if (alarm.hours == 12) 12 else alarm.hours + 12
+    }
+
+    val formattedTime = LocalTime.of(adjustedHours, alarm.minutes)
         .format(DateTimeFormatter.ofPattern("hh:mm a"))
 
     Card(
