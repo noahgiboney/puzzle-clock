@@ -12,4 +12,4 @@ In order to handle the persistant storage of user alarms between app session, we
 new activity(the puzzle alarm) at the scheduled alarm time. The alarm sound playing is made possible with a simple media player object and audio file stored in the resources section of the project.
 
 ## Minimum Deployment
-Taget Android API is 31.
+Target Android API is 31.
