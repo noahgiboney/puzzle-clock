@@ -10,13 +10,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +33,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -60,30 +65,37 @@ fun AlarmsScreen(
         topBar = {
             TopAppBar(
                 colors = topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
                 title = {
                     Text(
-                        text = "Puzzle Clock"
+                        text = "Puzzle Clock",
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 },
                 actions = {
                     IconButton(onClick = { onNavigateToSettings() }) {
                         Icon(
                             imageVector = Icons.Filled.Settings,
-                            contentDescription = "Modify settings"
+                            contentDescription = "Modify settings",
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 },
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { onNavigateToEditAlarm() }) {
+            FloatingActionButton(
+                onClick = { onNavigateToEditAlarm() },
+                containerColor = MaterialTheme.colorScheme.primary,
+                elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 8.dp)
+            ) {
                 Log.d("tag", "test")
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = "Create new alarm"
+                    contentDescription = "Create new alarm",
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }
@@ -149,6 +161,12 @@ fun AlarmCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(10.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .shadow(6.dp, RoundedCornerShape(16.dp)), // Soft elevation
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        )
     ) {
         Row(
             modifier = Modifier
@@ -161,8 +179,8 @@ fun AlarmCard(
                 modifier = Modifier
                     .padding(vertical = 14.dp)
             ) {
-                Text(alarm.title, fontSize = 18.sp)
-                Text(formattedTime)
+                Text(alarm.title, fontSize = 18.sp, style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold))
+                Text(formattedTime, style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Normal))
             }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -175,7 +193,8 @@ fun AlarmCard(
                 IconButton(onClick = { viewModel.deleteAlarm(alarm) }) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = "Delete alarm"
+                        contentDescription = "Delete alarm",
+                        tint = MaterialTheme.colorScheme.error
                     )
                 }
             }

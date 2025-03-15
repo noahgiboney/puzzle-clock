@@ -13,15 +13,19 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TimeInput
+import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,18 +33,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.puzzleclock.R
 import com.example.puzzleclock.data.AlarmRepository
 import com.example.puzzleclock.data.Meridiem
 import com.example.puzzleclock.ui.viewModels.AlarmsViewModel
 import com.example.puzzleclock.ui.viewModels.AlarmsViewModelFactory
 import com.example.puzzleclock.ui.viewModels.NewAlarmViewModel
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,12 +70,21 @@ fun NewAlarmScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text("New Alarm") },
+                colors = topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                ),
+                title = {
+                    Text(
+                        text="New Alarm",
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                    )},
                 navigationIcon = {
                     IconButton(onClick = { onNavigateUp() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -98,11 +108,14 @@ fun NewAlarmScreen(
                         onNavigateUp()
                     }
                 },
-                modifier = Modifier.alpha(if (isTitleValid) 1f else 0.5f)
+                modifier = Modifier.alpha(if (isTitleValid) 1f else 0.5f),
+                containerColor = MaterialTheme.colorScheme.primary,
+                elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 8.dp)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Check,
-                    contentDescription = "Add Alarm"
+                    contentDescription = "Add Alarm",
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }
@@ -110,8 +123,9 @@ fun NewAlarmScreen(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(horizontal = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                .padding(horizontal = 20.dp)
+                .padding(vertical = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             AlarmTitleInput(viewModel = viewModel)
             TimePicker(timePickerState)
@@ -135,7 +149,18 @@ fun TimePicker(timePickerState: TimePickerState, modifier: Modifier = Modifier) 
             TimeInput(
                 modifier = modifier.padding(top = 20.dp),
                 state = timePickerState,
+                colors = TimePickerDefaults.colors(
+                    clockDialColor = MaterialTheme.colorScheme.surfaceVariant,
+                    clockDialSelectedContentColor = MaterialTheme.colorScheme.onSurface,
+                    clockDialUnselectedContentColor = MaterialTheme.colorScheme.onSurface,
+                    selectorColor = MaterialTheme.colorScheme.primary,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    periodSelectorBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    periodSelectorSelectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    timeSelectorSelectedContentColor = MaterialTheme.colorScheme.onSurface,
+                    timeSelectorUnselectedContentColor = MaterialTheme.colorScheme.onSurface
                 )
+            )
         }
     }
 }
